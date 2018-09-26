@@ -112,7 +112,7 @@ void Subsection(char * path)
             vector<P> v;
             Subsubsetion(childpath,v);
             if(v.size() >= 1)
-             vec.push_back(v);
+                vec.push_back(v);
         }
         else if(ent->d_type==DT_REG)
         {
@@ -138,18 +138,28 @@ void Subsection(char * path)
     sort(vec.begin(),vec.end());
     for(int i = 0; i < vec.size(); ++i)
     {
-        //out<<vec[i].second<<" "<<vec[i].first<<endl;
-        if(vec[i].empty()) continue;
-        string t = vec[i][0].first;
-        t = t.substr(0,t.find_last_of('/'));
-
-        t = t.substr(t.find_last_of('/')+1);
-        cout<<t<<endl;
-        fprintf(tex, "\\subsection{%s}\n",t.c_str());
-        for(int j = 0;j < vec[i].size(); ++j){
-            fprintf(tex, "\\subsubsection{%s}\n",vec[i][j].second.c_str());
-            fprintf(tex, "\\inputminted{c++}{%s}\n",vec[i][j].first.c_str());
+        if(vec[i].size() == 1)
+        {
+            fprintf(tex, "\\subsection{%s}\n",vec[i][0].second.c_str());
+            fprintf(tex, "\\inputminted{c++}{%s}\n",vec[i][0].first.c_str());
         }
+        else
+        {
+            if(vec[i].empty()) continue;
+            string t = vec[i][0].first;
+            t = t.substr(0,t.find_last_of('/'));
+
+            t = t.substr(t.find_last_of('/')+1);
+            cout<<t<<endl;
+            fprintf(tex, "\\subsection{%s}\n",t.c_str());
+            for(int j = 0; j < vec[i].size(); ++j)
+            {
+                fprintf(tex, "\\subsubsection{%s}\n",vec[i][j].second.c_str());
+                fprintf(tex, "\\inputminted{c++}{%s}\n",vec[i][j].first.c_str());
+            }
+        }
+        //out<<vec[i].second<<" "<<vec[i].first<<endl;
+
         //   fprintf(file,"<%s>\t\t<%s>\n",vec[i].second.c_str(),vec[i].first.c_str());
         //   printf("<%s>\t\t<%s>\n",vec[i].second.c_str(),vec[i].first.c_str());
     }
